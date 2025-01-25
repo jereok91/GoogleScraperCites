@@ -92,6 +92,14 @@ def spinning_cursor():
     while True:
         yield f"\033[91m{next(spinner)}\033[0m"  # Red-colored spinner using ANSI escape codes
 
+# Función para seleccionar un registro específico basado en un criterio
+def select_specific_city_and_state(cities_states, city_name, state_name=None):
+    for city, state in cities_states:  # Itera sobre las tuplas (city, state)
+        if (city_name and city == city_name) or (state_name and state == state_name):
+            return (city, state)  # Devuelve la tupla que coincide con el criterio
+    return None 
+    # return cities_states.get(city_name)
+
 def main():
     # Display menu for business categories
     print("Select one or more business types by entering their numbers separated by commas or ranges (e.g., 1,3,5-7):")
@@ -157,8 +165,12 @@ def main():
             cities_states = cities_states_original.copy()
 
             while listings_scraped < num_listings_to_capture and len(cities_states) > 0:
-                selected_city, selected_state = select_random_city_and_state(cities_states)
+                city_imput = input("Enter the city you want to scrape: ")
+
+                # selected_city, selected_state = select_random_city_and_state(cities_states)
+                selected_city, selected_state = select_specific_city_and_state(cities_states, city_name=city_imput, state_name="")
                 cities_states.remove((selected_city, selected_state))  # Remove to avoid revisiting
+
 
                 print(f"Searching for {selected_business_type} in {selected_city}, {selected_state}.")
                 search_for = f"{selected_business_type} in {selected_city}, {selected_state}"
