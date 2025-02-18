@@ -145,6 +145,7 @@ def main():
 
     # Ask user for the number of listings to scrape per business type
     num_listings_to_capture = int(input(f"How many listings do you want to scrape for each business type? "))
+    city_imput = input("Enter the city you want to scrape: ")
 
     # Initialize BusinessList
     business_list = BusinessList()
@@ -165,7 +166,6 @@ def main():
             cities_states = cities_states_original.copy()
 
             while listings_scraped < num_listings_to_capture and len(cities_states) > 0:
-                city_imput = input("Enter the city you want to scrape: ")
 
                 # selected_city, selected_state = select_random_city_and_state(cities_states)
                 selected_city, selected_state = select_specific_city_and_state(cities_states, city_name=city_imput, state_name="")
@@ -250,7 +250,7 @@ def main():
                             business.phone_number = page.locator(phone_number_xpath).first.inner_text() if page.locator(phone_number_xpath).count() > 0 else "No Phone"
 
                             # Extract reviews_average
-                            reviews_average_element = details_panel.locator('xpath=.//span[@role="img" and @aria-label and contains(@aria-label, "stars")]').first
+                            reviews_average_element = details_panel.locator('xpath=.//span[@role="img" and @aria-label and contains(@aria-label, "estrellas") and not(contains(@aria-label, "opiniones"))]').first
                             if reviews_average_element.count() > 0:
                                 reviews_average_text = reviews_average_element.get_attribute('aria-label')
                                 if reviews_average_text:
@@ -266,7 +266,7 @@ def main():
 
                             # Extract reviews_count
                             # Updated XPath and extraction logic
-                            reviews_count_element = details_panel.locator('xpath=.//button[./span[contains(text(), "reviews")]]/span').first
+                            reviews_count_element = details_panel.locator('xpath=.//button[./span[contains(text(), "opiniones")]]/span').first
                             if reviews_count_element.count() > 0:
                                 reviews_count_text = reviews_count_element.inner_text()
                                 if reviews_count_text:
